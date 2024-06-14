@@ -22,7 +22,11 @@
 #ifndef ASB_CAN__H
 #define ASB_CAN__H
     #include "asb.h"
-    #include <mcp_can.h>
+#ifdef CAN_2518FD
+    #include <mcp2518fd_can.h>
+#else
+    #include <mcp2515_can.h>
+#endif
     #include <SPI.h>
 
     /**
@@ -48,7 +52,11 @@
              * @see MCP_CAN
              * @see https://github.com/Seeed-Studio/CAN_BUS_Shield
              */
-            MCP_CAN _interface;
+#ifdef CAN_2518FD
+    mcp2518fd _interface;
+#else
+    mcp2515_can _interface;
+#endif
 
             /**
              * Interrupt pin to be used

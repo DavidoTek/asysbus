@@ -26,7 +26,11 @@
 #define ASB_CAN__C
     #include "asb_can.h"
     #include "asb_proto.h"
-    #include <mcp_can.h>
+#ifdef CAN_2518FD
+    #include <mcp2518fd_can.h>
+#else
+    #include <mcp2515_can.h>
+#endif
     #include <SPI.h>
 
     volatile bool asb_CANIntReq=false;
