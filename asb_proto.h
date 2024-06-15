@@ -29,6 +29,7 @@
 
     #define ASB_CMD_LEGACY_8B     0x02
     #define ASB_CMD_BOOT          0x21
+    #define ASB_CMD_HEARTBEAT     0x22
     #define ASB_CMD_REQ           0x40
     #define ASB_CMD_0B            0x50 //0-Bit, generic pulse
     #define ASB_CMD_1B            0x51 //1-Bit, on/off

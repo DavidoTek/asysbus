@@ -56,6 +56,15 @@
         }
     }
 
+    void ASB::heartbeat() {
+        byte data[3];
+        unsigned long long uptime = (_millisOverflowCounter << 32) + millis();
+        data[0] = ASB_CMD_HEARTBEAT;
+        data[1] = (uptime >> 24) & 0xFF;
+        data[2] = (uptime >> 32) & 0xFF;
+        asbSend(ASB_PKGTYPE_BROADCAST, 0x00, sizeof(data), data);
+    }
+
     bool ASB::setNodeId(unsigned int id) {
         if(id < 0x0001 || id > 0x07FF) return false;
         _nodeId = id;
@@ -366,6 +375,17 @@
                 _module[i]->loop();
             }
         }
+
+        //Uptime and Heartbeat
+#if ASB_HEARTBEAT > 0
+        if(millis() < _lastHeartbeat) {
+            _millisOverflowCounter++;
+        }
+        if(millis() - _lastHeartbeat > ASB_HEARTBEAT) {
+            heartbeat();
+            _lastHeartbeat = millis();
+        }
+#endif
 
         return pkg;
     }
