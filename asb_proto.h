@@ -35,9 +35,9 @@
     #define ASB_CMD_PER           0x52 //%
     #define ASB_CMD_PING          0x70
     #define ASB_CMD_PONG          0x71
-    #define ASB_CMD_CFG_READ      0x80 //2-byte address
+    #define ASB_CMD_CFG_READ      0x80 //2-byte address, little endian
     #define ASB_CMD_CFG_WRITE     0x81 //2-byte-address + data
-    #define ASB_CMD_CFG_COMMIT    0x82 //2-byte-address
+    #define ASB_CMD_CFG_READ_RES  0x83 //2-byte-address + data
     #define ASB_CMD_IDENT         0x85 //Change local address, 2-byte-address
     #define ASB_CMD_S_TEMP        0xA0 //x*0.1°C, int
     #define ASB_CMD_S_HUM         0xA1 //x*0.1%RH, unsigned int
