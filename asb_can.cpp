@@ -73,12 +73,12 @@
         temp.source = 0;
         temp.port = -1;
 
-        temp.type = ((canAddr >> 28) & 0x03);
+        temp.type = ((canAddr >> 27) & 0x03);
         temp.source = (canAddr & 0x7FF);
         temp.target = ((canAddr >> 11) & 0xFFFF);
 
         if(temp.type == ASB_PKGTYPE_UNICAST) { //Unicast
-            temp.port = ((canAddr >> 23) & 0x1F);
+            temp.port = ((canAddr >> 22) & 0x1F);
             temp.target &= 0x7FF;
         }
 
@@ -97,13 +97,13 @@
           unsigned long addr = 0x80000000;
 
           if(type > 0x03) return 0;
-          addr |= ((unsigned long)type << 28);
+          addr |= ((unsigned long)type << 27);
 
           if(type == ASB_PKGTYPE_UNICAST) {
             if(target > 0x7FF) return 0;
             if(port < 0 ||port > 0x1F) return 0;
 
-            addr |= ((unsigned long)port << 23);
+            addr |= ((unsigned long)port << 22);
           }else{
             if(target > 0xFFFF) return 0;
           }
