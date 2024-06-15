@@ -1,12 +1,12 @@
 {
-  "name": "aSysBus",
-  "version": "0.0.4",
+  "name": "aSysBus2",
+  "version": "2.0.4",
   "description": "Home control communication library supporting several communication interfaces",
   "keywords": "communication, canbus, home, automation",
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/adlerweb/aSysBus.git"
+    "url": "https://github.com/DavidoTek/aSysBus.git"
   },
   "authors":
   [
@@ -16,7 +16,7 @@
     }
   ],
   "license": "GPL-3.0",
-  "homepage": "https://github.com/adlerweb/aSysBus",
+  "homepage": "https://github.com/DavidoTek/aSysBus",
   "dependencies": {
     "seeed-studio/CAN_BUS_Shield": "~2.3.3"
   },
