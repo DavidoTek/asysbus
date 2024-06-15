@@ -254,8 +254,17 @@
                     data[0] = ASB_CMD_PONG;
                     _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 1, data);
                 break;
-                //@todo config
                 //@todo nodeid
+                case ASB_CMD_CFG_READ:
+                    if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
+                    data[0] = ASB_CMD_CFG_READ_RES;
+                    data[1] = EEPROM.read(pkg.data[1] << 8 + pkg.data[2]);
+                    _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 2, data);
+                break;
+                case ASB_CMD_CFG_WRITE:
+                    if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
+                    EEPROM.write(pkg.data[1] << 8 + pkg.data[2], pkg.data[3]);
+                break;
             }
         }
 
