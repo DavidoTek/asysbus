@@ -75,6 +75,17 @@
     #endif
 
     /**
+     * Heartbeat interval in milliseconds
+     * 
+     * ASB_HEARTBEAT sets the interval in ms between two heartbeat messages
+     * sent by the controller in ASB::loop. Default is 60000ms (1 minute).
+     * Set to 0 to disable heartbeat messages and the uptime counter.
+     */
+    #ifndef ASB_HEARTBEAT
+        #define ASB_HEARTBEAT 60000
+    #endif
+
+    /**
      * ASB main controller class
      *
      * This class stores all node parameters, handles packet routing between
@@ -114,6 +125,17 @@
              */
             unsigned int _cfgAddrStop=511;
 
+            /**
+             * Last heartbeat timestamp (milliseconds)
+             */
+            unsigned long _lastHeartbeat=0;
+
+            /**
+             * Arduino's millis() overflow counter. Used to calculate uptime.
+             * Allows for 2^8*50 days of uptime (~35 years)
+             */
+            byte _millisOverflowCounter=0;
+
 
         public:
             /**
@@ -135,6 +157,11 @@
              * @return true if initialized
              */
             bool firstboot(void (*function)());
+
+            /**
+             * Send a heartbeat message
+             */
+            void heartbeat(void);
 
             /**
              * Change Node-ID
