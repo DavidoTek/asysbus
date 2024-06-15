@@ -1,4 +1,8 @@
-# aSysBus - The Arduino System Bus
+# aSysBus2 - A fork of the Arduino System Bus
+
+Forked from https://github.com/adlerweb/asysbus/
+
+---
 
 aSysBus is hard- and software to build a network of arduino nodes using a CAN-bus or other interfaces. It was build as a replacement for [iSysBus<sup>(DE)</sup>](https://www.mikrocontroller.net/articles/Hausbus_Diskussion), which used native AVR code and a java based configuration framework instead of Arduino. It is mostly used for home automation and other control communication.
 
