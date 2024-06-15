@@ -243,8 +243,9 @@
     }
 
     void ASB::asbProcess(asbPacket &pkg) {
-        byte i;
+        byte i, id;
         byte data[8];
+        unsigned int address;
         
         //Internal logic
         if(pkg.len >= 1) {
@@ -253,6 +254,34 @@
                     if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
                     data[0] = ASB_CMD_PONG;
                     _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 1, data);
+                break;
+                case ASB_CMD_REQ_MODULES:
+                    if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
+                    for(i=0; i<ASB_MODNUM; i++) {
+                        if(_module[i] != NULL) {
+                            id = _module[i]->_cfgId;
+                            address = 0;
+                            if(_cfgAddrStart < _cfgAddrStop && id < 128) {
+                                id <<= 4;
+                                address = _cfgAddrStart+2;
+                                byte check,len;
+                                do {
+                                    check = EEPROM.read(address);
+                                    len = ((1 << (check & 0x0F)) + 5);
+                                    if((check & 0xF0) == id) { //this is probably related to our module
+                                        break;
+                                    }
+                                    address += len;
+                                }while(address < _cfgAddrStop && check != 0xFF && check != 0x00);
+                            }
+                            data[0] = ASB_CMD_RES_MODULES;
+                            data[1] = _module[i]->_cfgId;
+                            data[2] = (address >> 8);
+                            data[3] = address;
+                            _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 4, data);
+                            delay(4); //Prevent bus congestion
+                        }
+                    }
                 break;
                 case ASB_CMD_CFG_READ:
                     if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
