@@ -1,0 +1,25 @@
+{
+  "name": "aSysBus",
+  "version": "0.0.4",
+  "description": "Home control communication library supporting several communication interfaces",
+  "keywords": "communication, canbus, home, automation",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/adlerweb/aSysBus.git"
+  },
+  "authors":
+  [
+    {
+      "name": "Florian Knodt",
+      "url": "https://github.com/adlerweb"
+    }
+  ],
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/adlerweb/aSysBus",
+  "dependencies": {
+    "seeed-studio/CAN_BUS_Shield": "~2.3.3"
+  },
+  "frameworks": "*",
+  "platforms": "*"
+}
