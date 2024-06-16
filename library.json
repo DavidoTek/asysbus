@@ -6,17 +6,21 @@
   "repository":
   {
     "type": "git",
-    "url": "https://github.com/DavidoTek/aSysBus.git"
+    "url": "https://github.com/DavidoTek/asysbus2.git"
   },
   "authors":
   [
     {
       "name": "Florian Knodt",
       "url": "https://github.com/adlerweb"
+    },
+    {
+      "name": "DavidoTek",
+      "url": "https://github.com/DavidoTek"
     }
   ],
   "license": "GPL-3.0",
-  "homepage": "https://github.com/DavidoTek/aSysBus",
+  "homepage": "https://github.com/DavidoTek/asysbus2",
   "dependencies": {
     "seeed-studio/CAN_BUS_Shield": "~2.3.3"
   },
