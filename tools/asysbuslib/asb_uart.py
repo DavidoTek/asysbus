@@ -4,9 +4,9 @@ import serial
 import io
 import threading
 
-from asb_comm import AsbComm
-from asb_endecode import asb_pkg_decode, asb_pkg_encode
-from asb_proto import AsbPacket
+from asysbuslib.asb_comm import AsbComm
+from asysbuslib.asb_endecode import asb_pkg_decode, asb_pkg_encode
+from asysbuslib.asb_proto import AsbPacket
 
 
 class AsbUart(AsbComm):

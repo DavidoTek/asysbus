@@ -1,7 +1,7 @@
 from typing import Callable
 from abc import ABC, abstractmethod
 
-from asb_proto import AsbPacket
+from asysbuslib.asb_proto import AsbPacket
 
 
 class AsbComm(ABC):

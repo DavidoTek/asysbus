@@ -1,6 +1,6 @@
 import re
 
-from asb_proto import AsbPacket, AsbMeta, AsbMessageType
+from asysbuslib.asb_proto import AsbPacket, AsbMeta, AsbMessageType
 
 
 def asb_validate_pkg(pkg: AsbPacket) -> bool:

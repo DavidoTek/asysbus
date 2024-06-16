@@ -2,9 +2,9 @@ from typing import Callable
 
 import time
 
-from asb_comm import AsbComm
-from asb_node import AsbNode
-from asb_proto import AsbMessageType, AsbCommand, AsbMeta, AsbPacket
+from asysbuslib.asb_comm import AsbComm
+from asysbuslib.asb_node import AsbNode
+from asysbuslib.asb_proto import AsbMessageType, AsbCommand, AsbMeta, AsbPacket
 
 
 PING_TIMEOUT_SEC = 1.0
