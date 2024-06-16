@@ -3,6 +3,7 @@ from typing import Callable
 import time
 
 from asb_comm import AsbComm
+from asb_node import AsbNode
 from asb_proto import AsbMessageType, AsbCommand, AsbMeta, AsbPacket
 
 
@@ -19,6 +20,7 @@ class AsbInterface:
 
         self._subscribe_list = []
         self._pings_pending = []
+        self._known_nodes: list[AsbNode] = []
 
     def _callback(self, pkg: AsbPacket|None) -> None:
         """ Internal callback function for incoming ASB packages """
@@ -27,6 +29,7 @@ class AsbInterface:
 
         self._handle_subscribe_list(pkg)
         self._handle_ping_timeout()
+        self._handle_node_discovery(pkg)
 
         # handle incoming packets with target = self
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_UNICAST and pkg.meta.target == self._node_id:
@@ -37,7 +40,7 @@ class AsbInterface:
                         source["cb"](True, time_ms)
                         self._pings_pending.pop(i)
 
-        # handle incoming packets with target = broadcast (booted, heartbeat, ...)
+        pass  # TODO: Handle incoming packets
 
     def _handle_subscribe_list(self, pkg: AsbPacket) -> None:
         for sub in self._subscribe_list:
@@ -54,13 +57,37 @@ class AsbInterface:
                 source["cb"](False, -1)
                 self._pings_pending.pop(i)
 
+    def _handle_node_discovery(self, pkg: AsbPacket) -> None:
+        """ Handle node discovery packets, called from the callback function """
+
+        node = None
+        for n in self._known_nodes:
+            if n.id == pkg.meta.source:
+                node = n
+                break
+
+        if not node:
+            node = AsbNode(pkg.meta.source, -1, -1, -1, [])
+            self._known_nodes.append(node)
+
+        node.last_seen = time.time()
+
+        # message: booted, heartbeat
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_BROADCAST:
             if pkg.data[0] == AsbCommand.ASB_CMD_BOOT:
-                pass  # TODO
+                node.boot_time = time.time()
             elif pkg.data[0] == AsbCommand.ASB_CMD_HEARTBEAT:
-                pass  # TODO
+                node.reported_uptime_days = round(((pkg.data[1]<<24)+(pkg.data[2]<<32))/86400000)
 
-        pass  # TODO: Handle incoming packets
+    def get_nodes(self) -> list[AsbNode]:
+        """
+        Get a list of all known nodes
+
+        Returns:
+            list[AsbNode]: A list of all known nodes
+        """
+        return self._known_nodes
+
     def subscribe(self, mtype: AsbMessageType, target: int, port: int, callback: Callable[[AsbPacket], None], cmd: AsbCommand|int|None = None) -> None:
         """
         Subscribe to a specific message type
