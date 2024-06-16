@@ -97,6 +97,7 @@ class AsbInterface:
             target (int): The target address to subscribe to
             port (int): The port to subscribe to
             callback (function): The callback function to call when a message is received (def my_callback(pkg: AsbPacket) -> None)
+            cmd (AsbCommand|int|None): The command to subscribe to (None = all commands)
         """
         self._subscribe_list.append({
             "mtype": mtype,
