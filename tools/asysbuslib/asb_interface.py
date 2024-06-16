@@ -17,12 +17,15 @@ class AsbInterface:
 
         self._comm.register_callback(self._callback)
 
+        self._subscribe_list = []
         self._pings_pending = []
 
     def _callback(self, pkg: AsbPacket|None) -> None:
+        """ Internal callback function for incoming ASB packages """
         if pkg is None:
             return
 
+        self._handle_subscribe_list(pkg)
         self._handle_ping_timeout()
 
         # handle incoming packets with target = self
@@ -35,6 +38,15 @@ class AsbInterface:
                         self._pings_pending.pop(i)
 
         # handle incoming packets with target = broadcast (booted, heartbeat, ...)
+
+    def _handle_subscribe_list(self, pkg: AsbPacket) -> None:
+        for sub in self._subscribe_list:
+            if sub["mtype"] == pkg.meta.mtype and \
+               sub["target"] == pkg.meta.target and \
+               sub["port"] == pkg.meta.port and \
+               (sub["cmd"] is None or int(sub["cmd"]) == pkg.data[0]):
+                    sub["cb"](pkg)
+
     def _handle_ping_timeout(self) -> None:
         """ Internal function to detect when a ping times out """
         for i, source in enumerate(self._pings_pending):
@@ -49,6 +61,23 @@ class AsbInterface:
                 pass  # TODO
 
         pass  # TODO: Handle incoming packets
+    def subscribe(self, mtype: AsbMessageType, target: int, port: int, callback: Callable[[AsbPacket], None], cmd: AsbCommand|int|None = None) -> None:
+        """
+        Subscribe to a specific message type
+
+        Parameters:
+            mtype (AsbMessageType): The message type to subscribe to
+            target (int): The target address to subscribe to
+            port (int): The port to subscribe to
+            callback (function): The callback function to call when a message is received (def my_callback(pkg: AsbPacket) -> None)
+        """
+        self._subscribe_list.append({
+            "mtype": mtype,
+            "target": target,
+            "port": port,
+            "cmd": cmd,
+            "cb": callback
+            })
 
     def asb_send_0bit(self, mtype: AsbMessageType, target: int, port: int) -> bool:
         """
