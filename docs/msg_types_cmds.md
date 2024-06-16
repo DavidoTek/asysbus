@@ -19,6 +19,7 @@ Messages can carry command + max 7 bytes of payload
 | Command | Length (bytes) | Purpose                                 |
 |---------|----------------|-----------------------------------------|
 | 0x21    | 0              | Node has booted                         |
+| 0x22    | 2              | Heartbeat (sent periodically by controller) |
 | 0x40    | 0              | Request state                           |
 | 0x50    | 0              | 0 Bit Message (e.g. S0-Sensor)          |
 | 0x51    | 1              | 1 Bit Message (e.g. on/off)             |
