@@ -23,11 +23,7 @@ class AsbInterface:
         if pkg is None:
             return
 
-        # handle ping timeouts
-        for i, source in enumerate(self._pings_pending):
-            if (time.time() - source["time"]) > PING_TIMEOUT_SEC:
-                source["cb"](False, -1)
-                self._pings_pending.pop(i)
+        self._handle_ping_timeout()
 
         # handle incoming packets with target = self
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_UNICAST and pkg.meta.target == self._node_id:
@@ -39,6 +35,13 @@ class AsbInterface:
                         self._pings_pending.pop(i)
 
         # handle incoming packets with target = broadcast (booted, heartbeat, ...)
+    def _handle_ping_timeout(self) -> None:
+        """ Internal function to detect when a ping times out """
+        for i, source in enumerate(self._pings_pending):
+            if (time.time() - source["time"]) > PING_TIMEOUT_SEC:
+                source["cb"](False, -1)
+                self._pings_pending.pop(i)
+
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_BROADCAST:
             if pkg.data[0] == AsbCommand.ASB_CMD_BOOT:
                 pass  # TODO
