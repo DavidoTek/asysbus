@@ -287,8 +287,10 @@
                 case ASB_CMD_CFG_READ:
                     if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
                     data[0] = ASB_CMD_CFG_READ_RES;
-                    data[1] = EEPROM.read(pkg.data[1] << 8 + pkg.data[2]);
-                    _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 2, data);
+                    data[1] = pkg.data[1];
+                    data[2] = pkg.data[2];
+                    data[3] = EEPROM.read((pkg.data[1] << 8) + pkg.data[2]);
+                    _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 4, data);
                 break;
                 case ASB_CMD_CFG_WRITE:
                     if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
