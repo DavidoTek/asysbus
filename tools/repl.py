@@ -36,6 +36,7 @@ def main(node_id: int, serial_port: str, baudrate: int):
                 print("help - Show this help")
                 print("exit - Exit the REPL")
                 print("nodes - List all nodes")
+                print("modules <target> - List all I/O modules of a node")
                 print("ping <target> - Ping a node")
                 print("0bit <target> <port> - Send a 0-bit command")
                 print("1bit <target> <port> <value> - Send a 1-bit command")
@@ -52,6 +53,29 @@ def main(node_id: int, serial_port: str, baudrate: int):
                     booted = datetime.fromtimestamp(node.boot_time).strftime("%Y-%m-%d %H:%M:%S") if node.boot_time != -1 else "?"
                     uptime = node.reported_uptime_days if node.reported_uptime_days != -1 else "?"
                     print(f"Node {hex(node.id)}: booted {booted}, up {uptime} days")
+
+            elif "modules" in inp:
+                if len(inp_split) != 2:
+                    print("Usage: modules <target>")
+                    continue
+                mtype, target = _parse_target(inp_split[1])
+                if mtype != AsbMessageType.ASB_PKGTYPE_UNICAST:
+                    print("Only unicast targets have modules")
+                    continue
+                node = None
+                for n in interface.get_nodes():
+                    if n.id == target:
+                        node = n
+                        break
+                if node is None:
+                    print("Node not found")
+                    continue
+                print(f"Node {hex(node.id)} has the following modules:")
+                for module in node.io_modules:
+                    print(f"  - Config ID: {hex(module.cfg_id)}")
+                    print(f"    Type: {module.mod_type.name if module.mod_type is not None else '?'}")
+                    print(f"    Address: {hex(module.address)}")
+                    print(f"    Target: {hex(module.target)}")
 
             elif "ping" in inp:
                 if len(inp_split) != 2:
@@ -89,8 +113,8 @@ def main(node_id: int, serial_port: str, baudrate: int):
                 port = int(inp_split[2], 16)
                 value = int(inp_split[3], 16)
                 interface.asb_send_percent(mtype, target, port, value)
-        except:
-            print("Command Error")
+        except Exception as e:
+            print("Command Error:", e)
 
 
 if __name__ == "__main__":
