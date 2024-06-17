@@ -19,7 +19,7 @@ class AsbUart(AsbComm):
             port (str): The serial port of the ASB interface (e.g. /dev/ttyUSB0)
             baudrate (int): The baudrate to use (e.g. 115200)
         """
-        self._ser = serial.Serial(port, baudrate, timeout=0)
+        self._ser = serial.Serial(port, baudrate, timeout=0.01)
         self._sio = io.TextIOWrapper(io.BufferedRWPair(self._ser, self._ser))
 
         self._callbacks = []
