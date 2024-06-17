@@ -58,7 +58,7 @@
 
     void ASB::heartbeat() {
         byte data[3];
-        unsigned long long uptime = (_millisOverflowCounter << 32) + millis();
+        unsigned long long uptime = ((unsigned long long)_millisOverflowCounter << 32) + millis();
         data[0] = ASB_CMD_HEARTBEAT;
         data[1] = (uptime >> 24) & 0xFF;
         data[2] = (uptime >> 32) & 0xFF;
@@ -294,11 +294,11 @@
                 break;
                 case ASB_CMD_CFG_WRITE:
                     if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
-                    EEPROM.write(pkg.data[1] << 8 + pkg.data[2], pkg.data[3]);
+                    EEPROM.write((pkg.data[1] << 8) + pkg.data[2], pkg.data[3]);
                 break;
                 case ASB_CMD_IDENT:
                     if(pkg.meta.type != ASB_PKGTYPE_UNICAST || pkg.meta.target != _nodeId) break;
-                    setNodeId(pkg.data[1] << 8 + pkg.data[2]);
+                    setNodeId((pkg.data[1] << 8) + pkg.data[2]);
                 break;
             }
         }
