@@ -21,6 +21,7 @@ class AsbInterface:
         self._subscribe_list = []
         self._pings_pending = []
         self._known_nodes: list[AsbNode] = []
+        self._states = {}
 
     def _callback(self, pkg: AsbPacket|None) -> None:
         """ Internal callback function for incoming ASB packages """
@@ -30,6 +31,7 @@ class AsbInterface:
         self._handle_subscribe_list(pkg)
         self._handle_ping_timeout()
         self._handle_node_discovery(pkg)
+        self._handle_state(pkg)
 
         # handle incoming packets with target = self
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_UNICAST and pkg.meta.target == self._node_id:
@@ -102,6 +104,17 @@ class AsbInterface:
             elif pkg.data[0] == AsbCommand.ASB_CMD_HEARTBEAT:
                 node.reported_uptime_days = round(((pkg.data[1]<<24)+(pkg.data[2]<<32))/86400000)
 
+    def _handle_state(self, pkg: AsbPacket) -> None:
+        # handle multicast state changes
+        if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_MULTICAST:
+            if pkg.data[0] in [AsbCommand.ASB_CMD_1B, AsbCommand.ASB_CMD_S_PER]:
+                self._states[(pkg.meta.mtype, pkg.meta.target, -1)] = {
+                    "type": int(pkg.data[0]),
+                    "value": pkg.data[1],
+                    "time": time.time(),
+                    "changed_by": pkg.meta.source
+                }
+
     def get_nodes(self) -> list[AsbNode]:
         """
         Get a list of all known nodes
@@ -152,6 +165,7 @@ class AsbInterface:
             1,
             [AsbCommand.ASB_CMD_0B]
         )
+        self._callback(pkg)
         return self._comm.send_packet(pkg)
 
     def asb_send_1bit(self, mtype: AsbMessageType, target: int, port: int, value: bool) -> bool:
@@ -180,6 +194,7 @@ class AsbInterface:
             2,
             [AsbCommand.ASB_CMD_1B, int(value)]
         )
+        self._callback(pkg)
         return self._comm.send_packet(pkg)
 
     def asb_send_percent(self, mtype: AsbMessageType, target: int, port: int, value: int) -> bool:
@@ -208,6 +223,7 @@ class AsbInterface:
             2,
             [AsbCommand.ASB_CMD_PER, value]
         )
+        self._callback(pkg)
         return self._comm.send_packet(pkg)
 
     def asb_send_ping(self, target: int) -> bool:
@@ -230,6 +246,7 @@ class AsbInterface:
             1,
             [AsbCommand.ASB_CMD_PING]
         )
+        self._callback(pkg)
         return self._comm.send_packet(pkg)
 
     def asb_do_ping(self, target: int, callback: Callable[[bool, int], None]) -> bool:
@@ -272,4 +289,5 @@ class AsbInterface:
             1,
             [AsbCommand.ASB_CMD_REQ_MODULES]
         )
+        self._callback(pkg)
         return self._comm.send_packet(pkg)
