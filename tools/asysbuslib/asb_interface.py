@@ -44,9 +44,9 @@ class AsbInterface:
 
     def _handle_subscribe_list(self, pkg: AsbPacket) -> None:
         for sub in self._subscribe_list:
-            if sub["mtype"] == pkg.meta.mtype and \
-               sub["target"] == pkg.meta.target and \
-               sub["port"] == pkg.meta.port and \
+            if (sub["mtype"] is None or sub["mtype"] == pkg.meta.mtype) and \
+               (sub["target"] is None or sub["target"] == pkg.meta.target) and \
+               (sub["port"] is None or sub["port"] == pkg.meta.port) and \
                (sub["cmd"] is None or int(sub["cmd"]) == pkg.data[0]):
                     sub["cb"](pkg)
 
@@ -111,15 +111,15 @@ class AsbInterface:
         """
         return self._known_nodes
 
-    def subscribe(self, mtype: AsbMessageType, target: int, port: int, callback: Callable[[AsbPacket], None], cmd: AsbCommand|int|None = None) -> None:
+    def subscribe(self, callback: Callable[[AsbPacket], None], mtype: AsbMessageType|None = None, target: int|None = None, port: int|None = None, cmd: AsbCommand|int|None = None) -> None:
         """
         Subscribe to a specific message type
 
         Parameters:
-            mtype (AsbMessageType): The message type to subscribe to
-            target (int): The target address to subscribe to
-            port (int): The port to subscribe to
             callback (function): The callback function to call when a message is received (def my_callback(pkg: AsbPacket) -> None)
+            mtype (AsbMessageType|None): The message type to subscribe to (None = all types)
+            target (int|None): The target address to subscribe to (None = all targets)
+            port (int|None): The port to subscribe to (None = all ports)
             cmd (AsbCommand|int|None): The command to subscribe to (None = all commands)
         """
         self._subscribe_list.append({
