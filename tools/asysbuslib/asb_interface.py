@@ -3,7 +3,7 @@ from typing import Callable
 import time
 
 from asysbuslib.asb_comm import AsbComm
-from asysbuslib.asb_node import AsbNode
+from asysbuslib.asb_node import AsbNode, AsbIoModule, AsbIoModuleType
 from asysbuslib.asb_proto import AsbMessageType, AsbCommand, AsbMeta, AsbPacket
 
 
@@ -69,8 +69,31 @@ class AsbInterface:
         if not node:
             node = AsbNode(pkg.meta.source, -1, -1, -1, [])
             self._known_nodes.append(node)
+            self.send_modules_request(pkg.meta.source)
 
         node.last_seen = time.time()
+
+        # message: modules
+        if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_UNICAST and pkg.meta.target == self._node_id:
+            if pkg.data[0] == AsbCommand.ASB_CMD_RES_MODULES:
+                io_mod = None
+                for m in node.io_modules:
+                    if m.cfg_id == pkg.data[1]:
+                        io_mod = m
+                        break
+                
+                if not io_mod:
+                    io_mod = AsbIoModule(
+                        cfg_id=pkg.data[1],
+                        mod_type=AsbIoModuleType(pkg.data[2]) if pkg.data[2] in AsbIoModuleType._value2member_map_ else None,
+                        address=(pkg.data[3]<<8)+pkg.data[4],
+                        target=-1
+                    )
+                    node.io_modules.append(io_mod)
+                else:
+                    # update existing module
+                    io_mod.mod_type = AsbIoModuleType(pkg.data[2]) if pkg.data[2] in AsbIoModuleType._value2member_map_ else None
+                    io_mod.address = (pkg.data[3]<<8)+pkg.data[4]
 
         # message: booted, heartbeat
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_BROADCAST:
@@ -228,3 +251,25 @@ class AsbInterface:
             "time": time.time(),
             "cb": callback
             })
+
+    def send_modules_request(self, target: int):
+        """
+        Send a request for the I/O modules of the target
+
+        Parameters:
+            target (int): The target address
+
+        Returns:
+            bool: True if the packet was sent successfully
+        """
+        pkg = AsbPacket(
+            AsbMeta(
+                AsbMessageType.ASB_PKGTYPE_UNICAST,
+                0,
+                target,
+                self._node_id
+            ),
+            1,
+            [AsbCommand.ASB_CMD_REQ_MODULES]
+        )
+        return self._comm.send_packet(pkg)
