@@ -276,9 +276,10 @@
                             }
                             data[0] = ASB_CMD_RES_MODULES;
                             data[1] = _module[i]->_cfgId;
-                            data[2] = (address >> 8);
-                            data[3] = address;
-                            _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 4, data);
+                            data[2] = _module[i]->_mod_type;
+                            data[3] = (address >> 8);
+                            data[4] = address;
+                            _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 5, data);
                             delay(4); //Prevent bus congestion
                         }
                     }

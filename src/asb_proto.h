@@ -63,6 +63,10 @@
     #define ASB_CMD_S_PM          0xD9 //smth per Minute, unsinged int (RPM, Pulse PM, etc)
     #define ASB_CMD_S_PS          0xDA //smth per Second, unsinged int
 
+    /* pre-defined I/O module types */
+    #define ASB_IO_TYPE_DIN       0x01
+    #define ASB_IO_TYPE_DOUT      0x02
+
     /**
      * Packet metadata
      * Contains all data except things related to the actual payload

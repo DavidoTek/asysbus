@@ -35,6 +35,11 @@
     class ASB_IO {
         public:
             /**
+             * Type used for identifying the module type
+             */
+            byte _mod_type=0;
+
+            /**
              * Read configuration block starting at provided address
              */
             byte _cfgId=255;
