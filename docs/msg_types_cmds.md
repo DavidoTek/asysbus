@@ -27,7 +27,9 @@ Messages can carry command + max 7 bytes of payload
 | 0x71    | 0              | PONG                                    |
 | 0x80    | 2              | READ_CONFIG                             |
 | 0x81    | 3              | WRITE_CONFIG                            |
-| 0x82    | 2              | COMMIT CONFIG                           |
+| 0x83    | 3              | READ_CONFIG_RESPONSE                    |
+| 0x86    | 0              | Request list of I/O modules             |
+| 0x87    | 4              | Responses to I/O modules request        |
 | 0x85    | 2              | REIDENT                                 |
 | 0xA0    | 2              | Temperature                             |
 | 0xA1    | 2              | Humidity                                |
@@ -49,3 +51,13 @@ Messages can carry command + max 7 bytes of payload
 | 0xD8    | 2              | something per hour |
 | 0xD9    | 2              | something per minute |
 | 0xDA    | 2              | something per second |
+
+
+# ASB I/O Modules
+
+The module types as specified in response to the I/O module request (0x86/0x87).
+
+| Type | Module         |
+|------|----------------|
+| 0x01 | ASB_IO_DIN     |
+| 0x02 | ASB_IO_DOUT    |
