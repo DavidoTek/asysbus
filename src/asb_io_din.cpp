@@ -27,6 +27,7 @@
     #include <asb.h>
 
     ASB_IO_DIN::ASB_IO_DIN(byte cfgId) {
+        _mod_type=ASB_IO_TYPE_DIN;
         _cfgId=cfgId;
     }
 

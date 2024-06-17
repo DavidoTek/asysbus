@@ -27,6 +27,7 @@
     #include <asb.h>
 
     ASB_IO_DOUT::ASB_IO_DOUT(byte cfgId) {
+        _mod_type=ASB_IO_TYPE_DOUT;
         _cfgId=cfgId;
     }
 

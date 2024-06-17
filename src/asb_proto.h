@@ -36,9 +36,11 @@
     #define ASB_CMD_PER           0x52 //%
     #define ASB_CMD_PING          0x70
     #define ASB_CMD_PONG          0x71
-    #define ASB_CMD_CFG_READ      0x80 //2-byte address
+    #define ASB_CMD_CFG_READ      0x80 //2-byte address, little endian
     #define ASB_CMD_CFG_WRITE     0x81 //2-byte-address + data
-    #define ASB_CMD_CFG_COMMIT    0x82 //2-byte-address
+    #define ASB_CMD_CFG_READ_RES  0x83 //2-byte-address + data
+    #define ASB_CMD_REQ_MODULES   0x86
+    #define ASB_CMD_RES_MODULES   0x87 //Module_cfgId byte, 2-byte-address
     #define ASB_CMD_IDENT         0x85 //Change local address, 2-byte-address
     #define ASB_CMD_S_TEMP        0xA0 //x*0.1°C, int
     #define ASB_CMD_S_HUM         0xA1 //x*0.1%RH, unsigned int
@@ -60,6 +62,10 @@
     #define ASB_CMD_S_PH          0xD8 //smth per Hour, unsinged int
     #define ASB_CMD_S_PM          0xD9 //smth per Minute, unsinged int (RPM, Pulse PM, etc)
     #define ASB_CMD_S_PS          0xDA //smth per Second, unsinged int
+
+    /* pre-defined I/O module types */
+    #define ASB_IO_TYPE_DIN       0x01
+    #define ASB_IO_TYPE_DOUT      0x02
 
     /**
      * Packet metadata
