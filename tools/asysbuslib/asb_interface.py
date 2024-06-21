@@ -269,7 +269,50 @@ class AsbInterface:
             "cb": callback
             })
 
-    def send_modules_request(self, target: int):
+    def change_node_id(self, target: int, new_id: int, force=False) -> bool:
+        """
+        Change the node ID of the target (ASB_CMD_IDENT)
+
+        Parameters:
+            target (int): The target address (current ID)
+            new_id (int): The new node ID (0-0x7FF)
+            force (bool): Force the change even if the new ID is already in use
+
+        Returns:
+            bool: True if the packet was sent successfully
+        """
+        if not 0 <= new_id <= 0x7FF:
+            return False
+
+        # check if new ID is already in use
+        if not force:
+            for node in self._known_nodes:
+                if node.id == new_id:
+                    return False
+
+        pkg = AsbPacket(
+            AsbMeta(
+                AsbMessageType.ASB_PKGTYPE_UNICAST,
+                0,
+                target,
+                self._node_id
+            ),
+            3,
+            [AsbCommand.ASB_CMD_IDENT, new_id >> 8, new_id & 0xFF]
+        )
+        self._callback(pkg)
+        res = self._comm.send_packet(pkg)
+
+        if res > 0:
+            # update node ID in known nodes
+            for node in self._known_nodes:
+                if node.id == target:
+                    node.id = new_id
+                    break
+
+        return res
+
+    def send_modules_request(self, target: int) -> bool:
         """
         Send a request for the I/O modules of the target
 
