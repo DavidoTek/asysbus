@@ -94,7 +94,7 @@ def asb_pkg_decode(line: str) -> AsbPacket|None:
     if not m:
         return None
 
-    pkg = AsbPacket(AsbMeta(0, -1, 0, 0), -1, [])
+    pkg = AsbPacket(AsbMeta(AsbMessageType.ASB_PKGTYPE_BROADCAST, -1, 0, 0), -1, [])
 
     if not int(m.group(1), 16) in AsbMessageType._value2member_map_:
         return None

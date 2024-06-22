@@ -20,9 +20,9 @@ class AsbUart(AsbComm):
             baudrate (int): The baudrate to use (e.g. 115200)
         """
         self._ser = serial.Serial(port, baudrate, timeout=0.01)
-        self._sio = io.TextIOWrapper(io.BufferedRWPair(self._ser, self._ser))
+        self._sio = io.TextIOWrapper(io.BufferedRWPair(self._ser, self._ser))  # type: ignore
 
-        self._callbacks = []
+        self._callbacks: list[Callable[[AsbPacket|None], None]] = []
 
         self._read_thread_running = True
         self._read_thread = threading.Thread(target=self._read_task)

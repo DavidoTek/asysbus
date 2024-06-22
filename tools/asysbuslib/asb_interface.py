@@ -11,17 +11,17 @@ PING_TIMEOUT_SEC = 1.0
 
 
 class AsbInterface:
-    
+
     def __init__(self, node_id: int, comm: AsbComm) -> None:
         self._node_id = node_id
         self._comm = comm
 
         self._comm.register_callback(self._callback)
 
-        self._subscribe_list = []
-        self._pings_pending = []
+        self._subscribe_list: list[dict] = []
+        self._pings_pending: list[dict] = []
         self._known_nodes: list[AsbNode] = []
-        self._states = {}
+        self._states: dict = {}
 
     def _callback(self, pkg: AsbPacket|None) -> None:
         """ Internal callback function for incoming ASB packages """
@@ -73,7 +73,7 @@ class AsbInterface:
             self._known_nodes.append(node)
             self.send_modules_request(pkg.meta.source)
 
-        node.last_seen = time.time()
+        node.last_seen = int(time.time())
 
         # message: modules
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_UNICAST and pkg.meta.target == self._node_id:
@@ -83,7 +83,7 @@ class AsbInterface:
                     if m.cfg_id == pkg.data[1]:
                         io_mod = m
                         break
-                
+
                 if not io_mod:
                     io_mod = AsbIoModule(
                         cfg_id=pkg.data[1],
@@ -100,7 +100,7 @@ class AsbInterface:
         # message: booted, heartbeat
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_BROADCAST:
             if pkg.data[0] == AsbCommand.ASB_CMD_BOOT:
-                node.boot_time = time.time()
+                node.boot_time = int(time.time())
             elif pkg.data[0] == AsbCommand.ASB_CMD_HEARTBEAT:
                 node.reported_uptime_days = round(((pkg.data[1]<<24)+(pkg.data[2]<<32))/86400000)
 
@@ -268,6 +268,8 @@ class AsbInterface:
             "time": time.time(),
             "cb": callback
             })
+
+        return True
 
     def change_node_id(self, target: int, new_id: int, force=False) -> bool:
         """

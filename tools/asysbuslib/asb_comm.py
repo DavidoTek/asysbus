@@ -7,7 +7,7 @@ from asysbuslib.asb_proto import AsbPacket
 class AsbComm(ABC):
 
     @abstractmethod
-    def register_callback(self, callback: Callable[[AsbPacket], None]) -> None:
+    def register_callback(self, callback: Callable[[AsbPacket|None], None]) -> None:
         """
         Register a callback function to be called when a new ASB package is received
 
