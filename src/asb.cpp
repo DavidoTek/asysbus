@@ -269,19 +269,18 @@
                                     check = EEPROM.read(address);
                                     len = ((1 << (check & 0x0F)) + 5);
                                     if((check & 0xF0) == id) { //this is probably related to our module
-                                        break;
+                                        data[0] = ASB_CMD_RES_MODULES;
+                                        data[1] = _module[i]->_cfgId;
+                                        data[2] = _module[i]->_mod_type;
+                                        data[3] = (address >> 8);
+                                        data[4] = address;
+                                        data[5] = len;
+                                        _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 6, data);
+                                        delay(4); //Prevent bus congestion
                                     }
                                     address += len;
                                 }while(address < _cfgAddrStop && check != 0xFF && check != 0x00);
                             }
-                            data[0] = ASB_CMD_RES_MODULES;
-                            data[1] = _module[i]->_cfgId;
-                            data[2] = _module[i]->_mod_type;
-                            data[3] = (address >> 8);
-                            data[4] = address;
-                            data[5] = len;
-                            _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 6, data);
-                            delay(4); //Prevent bus congestion
                         }
                     }
                 break;
