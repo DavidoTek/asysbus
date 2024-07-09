@@ -244,6 +244,7 @@
 
     void ASB::asbProcess(asbPacket &pkg) {
         byte i, id;
+        byte check,len;
         byte data[8];
         unsigned int address;
         
@@ -264,7 +265,6 @@
                             if(_cfgAddrStart < _cfgAddrStop && id < 128) {
                                 id <<= 4;
                                 address = _cfgAddrStart+2;
-                                byte check,len;
                                 do {
                                     check = EEPROM.read(address);
                                     len = ((1 << (check & 0x0F)) + 5);
@@ -279,7 +279,8 @@
                             data[2] = _module[i]->_mod_type;
                             data[3] = (address >> 8);
                             data[4] = address;
-                            _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 5, data);
+                            data[5] = len;
+                            _busAddr[pkg.meta.busId]->asbSend(ASB_PKGTYPE_UNICAST, pkg.meta.source, _nodeId, pkg.meta.port, 6, data);
                             delay(4); //Prevent bus congestion
                         }
                     }
