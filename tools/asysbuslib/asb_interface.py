@@ -89,6 +89,7 @@ class AsbInterface:
                         cfg_id=pkg.data[1],
                         mod_type=AsbIoModuleType(pkg.data[2]) if pkg.data[2] in AsbIoModuleType._value2member_map_ else None,
                         addresses=[(pkg.data[3]<<8)+pkg.data[4]],
+                        lengths=[pkg.data[5]],
                         target=-1
                     )
                     node.io_modules.append(io_mod)
@@ -96,6 +97,7 @@ class AsbInterface:
                     # update existing module
                     io_mod.mod_type = AsbIoModuleType(pkg.data[2]) if pkg.data[2] in AsbIoModuleType._value2member_map_ else None
                     io_mod.addresses.append((pkg.data[3]<<8)+pkg.data[4])
+                    io_mod.lengths.append(pkg.data[5])
 
         # message: booted, heartbeat
         if pkg.meta.mtype == AsbMessageType.ASB_PKGTYPE_BROADCAST:

@@ -17,11 +17,13 @@ class AsbIoModule:
         cfg_id (int): Config ID of the ASB I/O module
         mod_type (AsbIoModuleType|None): Module type if known
         addresses (list[int]): Addresses of the configuration in EEPROM
+        lengths (list[int]): Lengths of the configuration in EEPROM
         target (int): Target address or -1
     """
     cfg_id: int
     mod_type: AsbIoModuleType|None
     addresses: list[int]
+    lengths: list[int]
 
     target: int
 
