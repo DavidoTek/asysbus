@@ -58,7 +58,7 @@ Messages can carry command + max 7 bytes of payload
 
 The module types as specified in response to the I/O module request (0x86/0x87).
 
-| Type | Module         |
-|------|----------------|
-| 0x01 | ASB_IO_DIN     |
-| 0x02 | ASB_IO_DOUT    |
+| Type | Module         | Config Entries
+|------|----------------|----------------
+| 0x01 | ASB_IO_DIN     | byte `pin` , uint `target` , bool `invert` , bool `pullup` , byte `mode` , byte `last`
+| 0x02 | ASB_IO_DOUT    | byte `pin` , uint `target` , bool `invert` , bool `init` , byte `mode` , byte `last`
