@@ -33,8 +33,8 @@ class AsbCommand(IntEnum):
     ASB_CMD_S_LUX = 0xA5  # unsigned long
     ASB_CMD_S_UV = 0xA6  # *0.1, unsigned int
     ASB_CMD_S_IR = 0xA7  # unsigned long
-    ASB_CMD_S_PM25 = 0xB0  # TBD
-    ASB_CMD_S_PM10 = 0xB1  # TBD
+    ASB_CMD_S_PM25 = 0xB0  # µg/m³, unsigned long
+    ASB_CMD_S_PM10 = 0xB1  # µg/m³, unsigned long
     ASB_CMD_S_VOLT = 0xC0  # x*0.01V, int
     ASB_CMD_S_AMP = 0xC1  # x*0.01A, int
     ASB_CMD_S_PWR = 0xC2  # x*0.1W or VA, long

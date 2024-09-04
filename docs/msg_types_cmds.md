@@ -38,8 +38,8 @@ Messages can carry command + max 7 bytes of payload
 | 0xA5    | 4              | Lux                                     | `lux>>24` , `lux>>16` , `lux>>8` , `lux`
 | 0xA6    | 2              | UV-Index                                | `uv_high` , `uv_low`
 | 0xA7    | 4              | IR                                      | `ir>>24` , `ir>>16` , `ir>>8` , `ir`
-| 0xB0    | ??             | PM2.5                                   | ??
-| 0xB1    | ??             | PM10                                    | ??
+| 0xB0    | 4              | PM2.5                                   | `pm>>24` , `pm>>16` , `pm>>8` , `pm` (PM2.5, ng/m³)
+| 0xB1    | 4              | PM10                                    | `pm>>24` , `pm>>16` , `pm>>8` , `pm` (PM10, ng/m³)
 | 0xC0    | 2              | Voltage                                 | `voltage_high` , `voltage_low`
 | 0xC1    | 2              | Ampere                                  | `ampere_high` , `ampere_low`
 | 0xC2    | 2              | Power (W/VA)                            | `power_high` , `power_low`
