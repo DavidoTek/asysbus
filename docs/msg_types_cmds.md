@@ -32,17 +32,17 @@ Messages can carry command + max 7 bytes of payload
 | 0x86    | 0              | Request list of I/O modules             | -
 | 0x87    | 5              | Responses to I/O modules request        | `mod_cfg_id` , `mod_type` , `addr_high` , `addr_low` , `cfg_len`
 | 0x85    | 2              | REIDENT                                 | `node_id_high` , `node_id_low`
-| 0xA0    | 2              | Temperature                             | `temp_high` , `temp_low`
-| 0xA1    | 2              | Humidity                                | `humid_high` , `humid_low`
-| 0xA2    | 2              | Pressure                                | `pressure_high` , `pressure_low`
+| 0xA0    | 2              | Temperature                             | `temp_high` , `temp_low` (x*0.1°C)
+| 0xA1    | 2              | Humidity                                | `humid_high` , `humid_low` (x*0.1%RH)
+| 0xA2    | 2              | Pressure                                | `pressure_high` , `pressure_low` (x*0.1hPa)
 | 0xA5    | 4              | Lux                                     | `lux>>24` , `lux>>16` , `lux>>8` , `lux`
 | 0xA6    | 2              | UV-Index                                | `uv_high` , `uv_low`
 | 0xA7    | 4              | IR                                      | `ir>>24` , `ir>>16` , `ir>>8` , `ir`
 | 0xB0    | 4              | PM2.5                                   | `pm>>24` , `pm>>16` , `pm>>8` , `pm` (PM2.5, ng/m³)
 | 0xB1    | 4              | PM10                                    | `pm>>24` , `pm>>16` , `pm>>8` , `pm` (PM10, ng/m³)
-| 0xC0    | 2              | Voltage                                 | `voltage_high` , `voltage_low`
-| 0xC1    | 2              | Ampere                                  | `ampere_high` , `ampere_low`
-| 0xC2    | 2              | Power (W/VA)                            | `power_high` , `power_low`
+| 0xC0    | 2              | Voltage                                 | `voltage_high` , `voltage_low` (x*0.01V)
+| 0xC1    | 2              | Ampere                                  | `ampere_high` , `ampere_low` (x*0.01A)
+| 0xC2    | 2              | Power (W/VA)                            | `power_high` , `power_low` (x*0.1W or VA)
 | 0xD0    | 1              | Generic % (Valve, etc)                  | `value` (0-100)
 | 0xD1    | 2              | Generic ‰                               | `value_high` , `value_low` (0-1000)
 | 0xD2    | 2              | Parts per million                       | `value_high` , `value_low` (0-65535)

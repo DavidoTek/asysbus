@@ -21,11 +21,11 @@ class AsbCommand(IntEnum):
     ASB_CMD_PER = 0x52  # %
     ASB_CMD_PING = 0x70
     ASB_CMD_PONG = 0x71
-    ASB_CMD_CFG_READ = 0x80  # 2-byte address
+    ASB_CMD_CFG_READ = 0x80  # 2-byte address, little endian
     ASB_CMD_CFG_WRITE = 0x81  # 2-byte-address + data
     ASB_CMD_CFG_READ_RES = 0x83  # 2-byte-address + data
     ASB_CMD_REQ_MODULES = 0x86
-    ASB_CMD_RES_MODULES = 0x87
+    ASB_CMD_RES_MODULES = 0x87  # Module_cfgId byte, type, 2-byte-address, config len
     ASB_CMD_IDENT = 0x85  # Change local address, 2-byte-address
     ASB_CMD_S_TEMP = 0xA0  # x*0.1°C, int
     ASB_CMD_S_HUM = 0xA1  # x*0.1%RH, unsigned int
