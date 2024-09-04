@@ -45,6 +45,8 @@
     #define ASB_CMD_S_TEMP        0xA0 //x*0.1°C, int
     #define ASB_CMD_S_HUM         0xA1 //x*0.1%RH, unsigned int
     #define ASB_CMD_S_PRS         0xA2 //x*0.1hPa, unsigned int
+    #define ASB_CMD_S_CO2         0xA3 //Parts per million, unsingned int
+    #define ASB_CMD_S_ECO2        0xA4 //Parts per million, unsingned int
     #define ASB_CMD_S_LUX         0xA5 //unsigned long
     #define ASB_CMD_S_UV          0xA6 //*0.1, unsigned int
     #define ASB_CMD_S_IR          0xA7 //unsigned long

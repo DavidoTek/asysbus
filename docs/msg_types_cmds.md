@@ -35,6 +35,8 @@ Messages can carry command + max 7 bytes of payload
 | 0xA0    | 2              | Temperature                             | `temp_high` , `temp_low` (x*0.1°C)
 | 0xA1    | 2              | Humidity                                | `humid_high` , `humid_low` (x*0.1%RH)
 | 0xA2    | 2              | Pressure                                | `pressure_high` , `pressure_low` (x*0.1hPa)
+| 0xA3    | 2              | CO2                                     | `co2_high` , `co2_low` (ppm)
+| 0xA4    | 2              | eCO2                                    | `eco2_high` , `eco2_low` (ppm)
 | 0xA5    | 4              | Lux                                     | `lux>>24` , `lux>>16` , `lux>>8` , `lux`
 | 0xA6    | 2              | UV-Index                                | `uv_high` , `uv_low`
 | 0xA7    | 4              | IR                                      | `ir>>24` , `ir>>16` , `ir>>8` , `ir`
